@@ -1,0 +1,15 @@
+.uploadImageContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed rgb(105, 105, 105);
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.uploadImageContainer:hover {
+    cursor: pointer;   
+    border: 1px dashed rgb(142, 142, 142);
+    border-radius: 5px;
+}

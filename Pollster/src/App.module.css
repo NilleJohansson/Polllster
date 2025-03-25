@@ -1,0 +1,4 @@
+.container {
+  display: grid;
+  /* grid-template-rows: 0fr 0fr 1fr 10fr 1fr; */
+}

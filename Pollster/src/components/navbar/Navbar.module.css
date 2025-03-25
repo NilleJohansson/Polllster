@@ -1,0 +1,19 @@
+.navButton {
+    color: white;
+    border-color: white;
+}
+
+.navButton:hover {
+    color: primary;
+}
+
+.circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    border-radius: 50%; /* may require vendor prefixes */
+    background: rgb(111, 183, 59);
+}

@@ -1,0 +1,34 @@
+version: '3.8'  # Use a suitable version for your project
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./PollsterAPI
+    container_name: springboot-api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/your-db-name
+    profiles:
+      - dev
+      - prod
+
+  frontend:
+    build:
+      context: ./Pollster  # Ensure this points to the correct directory
+      target: development
+    container_name: react-frontend
+    ports:
+      - "3000:3000"  # Map to the right port
+    command: npm run dev
+
+volumes:
+  mongo-data:

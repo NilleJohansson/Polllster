@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Console Appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+            <!-- Increase the size of the buffer to avoid log truncation -->
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+    </appender>
+
+    <!-- Set the root log level to DEBUG -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- Set specific loggers to DEBUG level -->
+    <logger name="org.springframework" level="DEBUG" />
+    <logger name="com.example.pollsterapi" level="DEBUG" />
+
+    <!-- Increase the log message length limit -->
+    <property name="LOG_MESSAGE_SIZE_LIMIT" value="1048576" />
+
+</configuration>

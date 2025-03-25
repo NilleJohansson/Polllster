@@ -1,0 +1,41 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./PollsterAPI
+      args:
+        ENV: ${DOCKER_ENV:-production}
+    container_name: springboot-api
+    volumes:
+      - ~/.m2:/root/.m2      # Maven local cache for dependencies
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/Pollster
+    command: >
+      ${DOCKER_ENV:-production} == "dev" ?
+      ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8080 -Dspring-boot.run.profiles=dev' :
+      java -jar app.jar
+
+  frontend:
+    build:
+      context: ./Pollster  # Ensure this points to the correct directory
+      target: ${DOCKER_TARGET}
+    container_name: react-frontend
+    volumes:
+      - ./Pollster:/app
+      - /app/node_modules  # Prevents overwriting node_modules
+    ports:
+      - "5173:${FRONTEND_PORT:-5173}"  # Map to the right port
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+volumes:
+  mongo-data:

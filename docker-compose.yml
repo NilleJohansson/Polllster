@@ -1,0 +1,46 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./PollsterAPI
+      args:
+        ENV: ${DOCKER_ENV:-production}
+    container_name: springboot-api
+    ports:
+      - "8080:8080"
+      - "5006:5005"
+#    environment:
+#      - SPRING_DATA_MONGODB_URI=mongodb+srv://$MONGO_USER:$MONGO_PASSWORD@$MONGO_HOST/Pollster
+#    environment:
+#      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/Pollster
+    volumes:
+      - ./PollsterAPI/src:/app/src          # Mount the source folder for live code changes
+      - ./PollsterAPI:/app  # Mount the backend source code
+      - /app/target          # Mount the compiled files to prevent rebuild bash -c "if [ \"${DOCKER_ENV}\" = \"dev\" ]; then ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev; else java -jar app.jar; fi"
+    depends_on:
+      - mongo
+#    command: >
+#      bash -c ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev;
+
+  frontend:
+    build:
+      context: ./Pollster  # Ensure this points to the correct directory
+      target: ${DOCKER_TARGET}
+    container_name: react-frontend
+    volumes:
+      - ./Pollster:/app
+      - /app/node_modules  # Prevents overwriting node_modules
+    ports:
+      - "5173:${FRONTEND_PORT:-5173}"  # Map to the right port
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+volumes:
+  mongo-data:
